@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <!-- css -->
+    <link rel="stylesheet" href="/public/main.css">
+    
+    <title>Document</title>
+  </head>
+  <body>
+     <!-- nav -->
+   <%-include('nav.html') %>
+   <!-- content -->
+    
+    <div class="container mt-4">
+
+        <h4 class="text-center mb-3">업로드페이지</h4>
+        <!-- upload 경로로 post 요청 -->        <!-- 서버로 폼데이터 전송하는 방식 (보통 파일전송할때는 이렇게) -->       
+        <form method="POST" action="/upload" enctype="multipart/form-data"><!-- 인코딩 하지말고 파일 그대로 전송 -->
+            <!-- input type을 file로 하면  파일 업로드 가능.-->
+            <input type="file" name="사진" multiple>
+            <button type="submit" class="btn-primary">사진 전송</button>
+        </form>
+    </div>
+
+
+          <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+   
+    
+  </body>
+  
+</html>

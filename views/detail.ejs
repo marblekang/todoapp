@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <!-- css -->
+    <link rel="stylesheet" href="/public/main.css">
+    
+    <title>Document</title>
+  </head>
+  <body>
+     <!-- nav -->
+   <%-include('nav.html') %>
+   <!-- content -->
+    <div class="container mt-3">
+      <h4 class="text-center">상세페이지</h4>
+      <div class="card" style="width: 100%">
+        <div class="card-body">
+          <h5 class="card-title"><%= data.title %></h5>
+          <h6 class="card-subtitle mb-2 text-muted"><%= data.date %></h6>
+          <p class="card-text">임시내용입니다.</p>
+          <button class="btn btn-danger"><a href="/" style="color:white">home</a></button>
+          <button class="btn btn-primary correct" data-id="<%= data._id %>">
+            correct
+          </button>
+          <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>$('.correct').click(function(e){
+      window.location.replace("/edit/"+e.target.dataset.id)
+    })</script>
+        </div>
+      </div>
+    </div>
+  </body>
+  
+</html>

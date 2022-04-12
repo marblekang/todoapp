@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/main.css">
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/1fab1b302a.js" crossorigin="anonymous"></script>
+
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container p-4 detail">
+
+    <div class="row">
+      <div class="col-3">
+        <ul class="list-group chat-list">
+          <% for(var i = 0 ; i < data.length; i++) { %>
+          <li class="list-group-item" data-id=" <%= data[i]._id %> ">
+            <h6>제목 : <%= data[i].title %> </h6>
+            <h6 class="text-small">멤버: <%= data[i].member[0] %></h6>
+            <h6 class="text-small">날짜 : <%= data[i].date %></h6>
+          </li>
+          <% } %>
+          <li class="list-group-item">
+            <h6>채팅방2</h6>
+            <h6 class="text-small">채팅방설명</h6>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-9 p-0">
+        <div class="chat-room">
+          <ul class="list-group chat-content">
+            <li><span class="chat-box">채팅방1 내용</span></li>
+            <li><span class="chat-box">채팅방1 내용</span></li>
+            <li><span class="chat-box mine">채팅방1 내용</span></li>
+          </ul>
+          <div class="input-group">
+
+            <input class="form-control" id="chat-input">
+            <button class="btn btn-warning" id="send">전송</button>
+          </div>
+          <script>
+            var 지금누른채팅방아이디;
+            var eventSource
+            $('.list-group-item').click(function () {
+              지금누른채팅방아이디 = this.dataset.id
+
+              if (eventSource != undefined) {
+                eventSource.close()
+              }
+              //get요청 대신 실시간 데이터 전송하는 api를 받아오는 함수?
+              eventSource = new EventSource('/message' + 지금누른채팅방아이디);
+              //서버에서작명한 데이터명
+              eventSource.addEventListener('test', function (e) {
+                //서버에서 JSON문자형으로 전송한거 다시 바꿔서(따옴표 제거하고) 출력
+                // e안에 서버가 보낸 data:~~가 들어있따.
+                var messageContent = JSON.parse(e.data)
+                messageContent.forEach((a) => {
+                  $('.chat-content').append('<li><span class="chat-box">' + a.content + '</span></li>')
+                });
+              })
+            });
+            $('#send').click(() => {
+              var sendData = {
+                parent: 지금누른채팅방아이디,
+                /* 채팅방의 db상 id */
+                content: $('#chat-input').val()
+              }
+              $.post('/message', sendData).then(() => {
+                console.log('채팅 전송 성공')
+              })
+            })
+          </script>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

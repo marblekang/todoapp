@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="/public/main.css">
+
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/1fab1b302a.js" crossorigin="anonymous"></script>
+
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <title>Hello, world!</title>
+</head>
+
+<body>
+  <!-- nav -->
+  <%- include('nav.html') %>
+
+  <!-- 제목 -->
+  <h4 class="text-center">서버에서 가져온 할 일 list</h4>
+
+  <!-- 모달창 검색 -->
+  <div class="container input-group mb-2">
+    <input class="form-control" id="search-input">
+    <button class="input-group-append btn btn-danger" id="search">검색</button>
+  </div>
+
+  <!-- POST 요청 말고 GET요청으로 데이터 전송하기. -->
+  <!-- query string(query parameterr) 사용-->
+  <script>
+    $('#search').click(() => {
+      // query string으로 정보전달
+      var inputval = $('#search-input').val(); // input에 입력한 값을 변수에 담고 쿼리 파라미터로 보냄.
+      window.location.replace('/search?value=' + inputval) // 주소 바꾸는 함수.
+    })
+  </script>
+
+  <!-- List -->
+  <div class="container">
+    <ul class="list-group">
+      <% for (var i = 0; i < posts.length; i++){ %>
+      <!-- 반복문 -->
+      <li class="list-group-item">
+        <p>고유아이디: <%= posts[i].user_id %></p>
+        <p>글번호 : <%= posts[i]._id %></p>
+        <h4 class="title" data-id="<%= posts[i]._id %>">
+          할 일 : <%= posts[i].title %>
+        </h4>
+        <p> 마감날짜 : <%= posts[i].date %></p>
+        <p> 작성자 : <%= posts[i].writer %></p>
+        <button class="btn btn-danger delete" data-id="<%= posts[i]._id %>">
+          삭제
+        </button>
+        <button class="btn btn-warning chatting" data-id="<%= posts[i].user_id %>" data-name="<%= posts[i].writer %>">
+          <i class="fa-solid fa-comment"></i>
+
+        </button>
+
+        <script>
+          $('.chatting').click((e) => {
+            /* ajax 요청 축약버전 */
+            $.post('/chat', {
+                userId: e.target.dataset.id,
+                writer: e.target.dataset.name
+              })
+              .then(() => {
+                console.log('채팅방개설');
+
+              }) ///성공했을때 실행
+          })
+        </script>
+
+
+      </li>
+      <% } %>
+    </ul>
+  </div>
+
+  <!-- Optional JavaScript -->
+
+  <!--  -->
+  <!--  <script>
+      $('.correct').click((e)=>{
+        window.location.replace("/edit/"+e.target.dataset.id)
+      })
+    </script> -->
+  <!-- 제목 누르면 detail로 -->
+  <script>
+    $('.title').click(function (e) {
+      window.location.replace("/detail/" + e.target.dataset.id)
+    })
+  </script>
+
+  <script>
+    $('.delete').click(function (e) {
+      var pushed = $(this) // 현재 이벤트가 동작하는곳.
+      $.ajax({
+          method: 'DELETE', // delete 요청으로
+          url: '/delete', // /delete 라는 주소로
+          data: {
+            _id: e.target.dataset.id
+          },
+          // 보낼 데이터 , 내가 클릭한 버튼에 숨겨진 data-id 값 가져오기.
+        })
+        .done(result => {
+          console.log('요청성공')
+          // Ajax 요청 성공시 실행할 코드
+          // 페이지 강제로 새로고침 , 삭제버튼 누른 li 제거
+          pushed.parent('li').fadeOut() // 지금누른것 의 부모 중 li태그를 fadeout(); - 제이쿼리 애니메이션 함수,, 서서히 사라지게.
+        })
+        .fail((xhr, textStatus, errorThrown) => {
+          // Ajax 요청 실패시 실행할 코드 , 에러 정보 출력
+          console.log(xhr, textStatus, errorThrown)
+        })
+    })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+
+</body>
+
+</html>
